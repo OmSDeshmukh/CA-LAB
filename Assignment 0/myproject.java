@@ -1,8 +1,8 @@
 public class myproject{
     public static void main(String args[]){
-        int L = 1000;
-        int w = 1;
-        double p = 0.99;
+        int L = 5;
+        int w = 2;
+        double p = 0.00001;
         int border[][] = new int[w][L];
 
         int dx[] = {1,1,1,0,0,-1,-1,-1};
@@ -20,7 +20,7 @@ public class myproject{
         //sensor = 1 
         //infiltrator = 2   
 
-        while(x == w-1 || time < 10000){
+        while(x == w-1 || time < 100000){
             for(int i = 0 ; i < w ; i++){
                 for(int j = 0 ; j < L ; j++){
                     int on = -1 ; 
@@ -34,7 +34,7 @@ public class myproject{
                 }
             }
 
-            //infiltrator simulation
+            // infiltrator simulation
             if(border[x][y] == 1){
                 break; 
             }
@@ -43,6 +43,9 @@ public class myproject{
                 boolean flag = false ;
                 for(int k = 0 ; k < 8 ; k++){
                     if(x+dx[k] >= 0 && x+dx[k] < w && y+dy[k] >=0 && y+dy[k] < L){
+                        if(x+dx[k] == w-1){
+                            break; 
+                        }
                         if(border[x+dx[k]][y+dy[k]] == 0 && flag == false && visited[x+dx[k]][y+dy[k]] == false){
                             x = x + dx[k];
                             y = y + dy[k];
@@ -63,11 +66,11 @@ public class myproject{
 
         //sensor simulation 
         System.out.println(time);
-        if(y != L){
-            System.out.println("Caught");
+        if(x == w-1){
+            System.out.println("Infiltrated");
         }
         else{
-            System.out.println("Infiltrated!");
+            System.out.println("Caught");
         }
 
     }
