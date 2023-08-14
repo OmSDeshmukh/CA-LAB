@@ -1,8 +1,8 @@
-public class myproject{
-    public static void main(String args[]){
+public class retry{
+    public static int simulate(int w , double p){
         int L = 1000;
-        int w = 2;
-        double p = 1;
+        // int w = 2;
+        // double p = 1;
         int border[][] = new int[w][L];
 
         int dx[] = {1,1,1,0,0,-1,-1,-1};
@@ -65,14 +65,31 @@ public class myproject{
         }
 
         //sensor simulation 
-        System.out.println(time);
-        if(x == w-1){
-            System.out.println("Infiltrated");
-        }
-        else{
-            System.out.println("Caught");
-        }
+        // if(x == w-1){
+        //     System.out.println("Infiltrated");
+        // }
+        // else{
+        //     System.out.println("Caught");
+        // }
+        return time ;
     }
+
+    public static void main(String args[]){
+        int width[] = {4, 6, 10, 12, 16, 20, 24, 30};
+        double probabilities[] = {0.2, 0.3, 0.4, 0.5, 0.6, 0.8};
+        ;
+        int timings[][] = new int[8][6];
+
+        for(int i = 0 ; i < 8 ; i++){
+            for(int j = 0 ; j < 6 ; j++){
+                timings[i][j] = simulate(width[i], probabilities[j]);
+                System.out.print(timings[i][j]/10 + " ");
+            }
+            System.out.println("");
+        }
+
+    }
+
 }
 
 
