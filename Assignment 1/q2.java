@@ -3,7 +3,14 @@ public class q2
     public static void main(String[] args)
     {
         int n=8;
-        int a[] = {1,2,3,4,32,6,7,8};
+        int a[] = {70,
+            80,
+            40,
+            20,
+            10,
+            30,
+            50,
+            60};
         int i=0;
         while(i<n)
         {
