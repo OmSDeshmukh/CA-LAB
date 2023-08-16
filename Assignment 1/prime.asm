@@ -1,31 +1,26 @@
 	.data
 a:
-	113
-    1
-    0
-    2
-    -1
+	110
 	.text
 main:
     load %x0, $a, %x3
-    load %x0, 2, %x4
-    load %x0, 2, %x5
-    load %x0, 2, %x7
+    addi %x0, 0, %x4
+    addi %x0, 0, %x5
     jmp wloop
 wloop:
     addi %x5, 1, %x5
     bgt %x5, %x3, finall
     div %x3, %x5, %x6
-    beq %x31, %x7, uc
+    beq %x31, %x0, uc
     jmp wloop
 uc:
     addi %x4, 1, %x4
     jmp wloop
 finall:
-    load %x0, 3, %x8
+    addi %x0, 2, %x8
     beq %x8, %x4, yup
-    load %x0, 4, %x10
+    subi %x0, 1, %x10
     end
 yup:
-    load %x0, 1, %x10
+    addi %x0, 1, %x10
     end

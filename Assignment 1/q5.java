@@ -20,6 +20,5 @@ public class q5
     // store the counter in x4
     //Store the loop variable in x5
     //to store the quotient in x6
-    //to store 0 in x7
     //to store 2 in x8
 }

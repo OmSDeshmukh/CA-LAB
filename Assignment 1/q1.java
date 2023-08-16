@@ -13,4 +13,7 @@ public class q1
         }
         System.out.println(ans);
     }
+    //x3 to store the number
+    //x5 to store 1
+
 }
