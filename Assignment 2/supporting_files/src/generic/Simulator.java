@@ -39,6 +39,14 @@ public class Simulator {
 		put(OperationType.srli , "10011");
 		put(OperationType.sra , "10100");
 		put(OperationType.srai , "10101");
+		put(OperationType.load, "10110");
+		put(OperationType.store, "10111");
+		put(OperationType.jmp, "11000");
+		put(OperationType.beq, "11001");
+		put(OperationType.bne, "11010");
+		put(OperationType.blt, "11011");
+		put(OperationType.bgt, "11100");
+		put(OperationType.end, "11101");
 	}};
 		
 	
@@ -103,39 +111,57 @@ public class Simulator {
 				int op=Integer.parseInt(opHashMap.get(instruction.operationType),2);
 				int pc = instruction.getProgramCounter();
 				
-				/////// we will start here
-				if (op <= 20 && op % 2 == 0) {
+
+				if (op <= 20 && op % 2 == 0) 
+				{
 					// R3 Type
-					line += convert_1(instruction.getSourceOperand1(), 5);
-					line += convert_1(instruction.getSourceOperand2(), 5);
-					line += convert_1(instruction.getDestinationOperand(), 5);
-					line += toBinaryOfSpecificPrecision(0, 12);
+					binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
+					binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 5);
+					binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
+					binary_string_inst += integerToBinaryString(0,12);
 					
 				}
-				else if (op == 29) {
-					line += toBinaryOfSpecificPrecision(0, 27);
+
+				//end operation
+				else if (op == 29) 
+				{
+					binary_string_inst += integerToBinaryString(0,27);
 				}
-				else if (op == 24) {
+
+				else if (op == 24) 
+				{
 					// RI Type
-					if (instruction.destinationOperand.getOperandType() == Operand.OperandType.Register) {
-						line += convert(instruction.getDestinationOperand(), 5);
-						line += toBinaryOfSpecificPrecision(0, 22);
-					} else {
-						line += toBinaryOfSpecificPrecision(0, 5);
-						int value = Integer.parseInt(convert(instruction.getDestinationOperand(), 5), 2) - pc;
+					//jmp operation
+					if (instruction.destinationOperand.getOperandType() == Operand.OperandType.Register) 
+					{
+						binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
+						binary_string_inst += integerToBinaryString(0, 22);
+					} 
+					else 
+					//solve tomorrow
+					{
+						binary_string_inst += integerToBinaryString(0, 5);
+						//doubt in 144
+						int value = Integer.parseInt(binary_string_inst(instruction.getDestinationOperand(), 5), 2) - pc;
 						String bin = toBinaryOfSpecificPrecision(value, 22);
 						line += bin.substring(bin.length() - 22);
 					}
 				}
-				else {
+
+				else 
+				{
 					// R2I Type
-					if (op >= 25 && op <= 28) {
+					if (op >= 25 && op <= 28) 
+					//solve tomorrow
+					{
 						int value = Integer.parseInt(convert(instruction.getDestinationOperand(), 5), 2) - pc;
 						line += convert(instruction.getSourceOperand1(), 5);
 						line += convert(instruction.getSourceOperand2(), 5);
 						String bin = toBinaryOfSpecificPrecision(value, 17);
 						line += bin.substring(bin.length() - 17);
-					} else {
+					} 
+					else 
+					{
 						line += convert(instruction.getSourceOperand1(), 5);
 						line += convert(instruction.getDestinationOperand(), 5);
 						line += convert(instruction.getSourceOperand2(), 17);
