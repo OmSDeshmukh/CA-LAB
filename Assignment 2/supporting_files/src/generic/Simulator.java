@@ -15,8 +15,7 @@ import generic.Instruction.OperationType;
 public class Simulator {
 		
 	static FileInputStream inputcodeStream = null;
-	public static HashMap<OperationType, String> opHashMap = new HashMap<>(){{
-		put(OperationType.add, "00000");
+	public static HashMap<OperationType, String> opHashMap = new HashMap<OperationType, String>(){{
 		put(OperationType.add, "00000");
 		put(OperationType.addi , "00001");
 		put(OperationType.sub , "00010");
@@ -98,7 +97,7 @@ public class Simulator {
 			
 
 			//assemble one instruction at a time, and write to the file
-			for (var instruction : ParsedProgram.code) 
+			for (generic.Instruction instruction : ParsedProgram.code) 
 			{
 				//initialise the string
 				String binary_string_inst = "";
@@ -132,6 +131,7 @@ public class Simulator {
 				{
 					// RI Type
 					//jmp operation
+					//no need of this block
 					if (instruction.destinationOperand.getOperandType() == Operand.OperandType.Register) 
 					{
 						binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
@@ -141,10 +141,10 @@ public class Simulator {
 					//solve tomorrow
 					{
 						binary_string_inst += integerToBinaryString(0, 5);
-						//doubt in 144
-						int value = Integer.parseInt(binary_string_inst(instruction.getDestinationOperand(), 5), 2) - pc;
-						String bin = toBinaryOfSpecificPrecision(value, 22);
-						line += bin.substring(bin.length() - 22);
+						int value = Integer.parseInt(integerToBinaryString(ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()), 5), 2) - pc;
+						//still don't understand these 2 steps
+						String extra = integerToBinaryString(value, 22);
+						binary_string_inst += extra.substring(extra.length() - 22);
 					}
 				}
 
@@ -153,29 +153,37 @@ public class Simulator {
 					// R2I Type
 					if (op >= 25 && op <= 28) 
 					//solve tomorrow
+					//not understanding the need of the step
 					{
-						int value = Integer.parseInt(convert(instruction.getDestinationOperand(), 5), 2) - pc;
-						line += convert(instruction.getSourceOperand1(), 5);
-						line += convert(instruction.getSourceOperand2(), 5);
-						String bin = toBinaryOfSpecificPrecision(value, 17);
-						line += bin.substring(bin.length() - 17);
+						binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
+						binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 5);
+						//don't understand these 3 steps
+						int value = Integer.parseInt(integerToBinaryString(ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()), 5), 2) - pc;
+						String extra = integerToBinaryString(value, 17);
+						binary_string_inst += extra.substring(extra.length() - 17);
 					} 
 					else 
 					{
-						line += convert(instruction.getSourceOperand1(), 5);
-						line += convert(instruction.getDestinationOperand(), 5);
-						line += convert(instruction.getSourceOperand2(), 17);
+						//don't understand these 3 steps
+						binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
+						binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
+						binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 17);
 					}
 				}
-				int instInteger = (int) Long.parseLong(line, 2);
+				int instInteger = (int) Long.parseLong(binary_string_inst, 2);
 				byte[] instBinary = ByteBuffer.allocate(4).putInt(instInteger).array();
 				file.write(instBinary);
 			}
 			file.close();
-		} catch (FileNotFoundException e) {
+		}
+		catch (FileNotFoundException e)
+		{
 			e.printStackTrace();
-		} catch (IOException e) {
+		} 
+		catch (IOException e) 
+		{
 			e.printStackTrace();
+			
 		}
 		
 	}
