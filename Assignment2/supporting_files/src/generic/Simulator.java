@@ -103,73 +103,164 @@ public class Simulator {
 				String binary_string_inst = "";
 				
 				//add the optcode to the string
-				binary_string_inst += opHashMap.get(instruction.operationType);
+				binary_string_inst += opHashMap.get(instruction.getOperationType());
 
 				//Getting the interger value of the optcode for cases because the 
 				//optcode is designed in such a way that similar operations occur together
-				int op=Integer.parseInt(opHashMap.get(instruction.operationType),2);
+				int op=Integer.parseInt(opHashMap.get(instruction.getOperationType()),2);
 				int pc = instruction.getProgramCounter();
 				
-
-				if (op <= 20 && op % 2 == 0) 
+				
+				switch(instruction.getOperationType())
 				{
-					// R3 Type
-					binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
-					binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 5);
-					binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
-					binary_string_inst += integerToBinaryString(0,12);
-					
-				}
-
-				//end operation
-				else if (op == 29) 
-				{
-					binary_string_inst += integerToBinaryString(0,27);
-				}
-
-				else if (op == 24) 
-				{
-					// RI Type
-					//jmp operation
-					//no need of this block
-					if (instruction.destinationOperand.getOperandType() == Operand.OperandType.Register) 
-					{
+					//R3I type
+					case add : 
+					case sub : 
+					case mul : 
+					case div : 
+					case and : 
+					case or : 
+					case xor : 
+					case slt : 
+					case sll : 
+					case srl : 
+					case sra :{
+						binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
+						binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 5);
 						binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
-						binary_string_inst += integerToBinaryString(0, 22);
-					} 
-					else 
-					//solve tomorrow
-					{
-						binary_string_inst += integerToBinaryString(0, 5);
-						int value = Integer.parseInt(integerToBinaryString(ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()), 5), 2) - pc;
-						//still don't understand these 2 steps
-						String extra = integerToBinaryString(value, 22);
-						binary_string_inst += extra.substring(extra.length() - 22);
+						binary_string_inst += integerToBinaryString(0,12);
+						break;	
 					}
-				}
-
-				else 
-				{
-					// R2I Type
-					if (op >= 25 && op <= 28) 
-					//solve tomorrow
-					//not understanding the need of the step
-					{
+					//end operation
+					case end:{
+							binary_string_inst += integerToBinaryString(0,27);
+							break;
+					}
+					//jmp operation
+					case jmp:{
+						//if jump to a register
+						if (instruction.destinationOperand.getOperandType() == Operand.OperandType.Register) 
+						{
+							binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
+							binary_string_inst += integerToBinaryString(0, 22);
+						} 
+						// jmp to label
+						else
+						{
+							binary_string_inst += integerToBinaryString(0, 5);
+							// int offset = Integer.parseInt(integerToBinaryString(ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()), 5), 2) - pc;
+							// String string_offset = integerToBinaryString(offset, 22);
+							// binary_string_inst += string_offset.substring(string_offset.length() - 22);
+							int offset = ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()) - pc;
+							String string_offset = integerToBinaryString(offset, 22);
+							binary_string_inst += string_offset.substring(string_offset.length() - 22);
+						}
+						break;
+					}
+					//R2I Branch instruction
+					case beq : 
+					case bne : 
+					case blt : 
+					case bgt :{
 						binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
 						binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 5);
 						//don't understand these 3 steps
-						int value = Integer.parseInt(integerToBinaryString(ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()), 5), 2) - pc;
-						String extra = integerToBinaryString(value, 17);
-						binary_string_inst += extra.substring(extra.length() - 17);
-					} 
-					else 
-					{
-						//don't understand these 3 steps
+						// int offset = Integer.parseInt(integerToBinaryString(ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()), 5), 2) - pc;
+						// String string_offset = integerToBinaryString(offset, 17);
+						// binary_string_inst += string_offset.substring(string_offset.length() - 17);
+						int offset =ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()) - pc;
+						String string_offset = integerToBinaryString(offset, 17);
+						binary_string_inst += string_offset.substring(string_offset.length() - 17);
+						break;
+					}
+					case addi :
+					case subi :
+					case muli :
+					case divi : 
+					case andi : 
+					case ori : 
+					case xori : 
+					case slti : 
+					case slli : 
+					case srli : 
+					case srai :
+					case load :
+					case store :{
 						binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
 						binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
 						binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 17);
+						break;
 					}
+					// case load :
+					// case store :{
+					// 	binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
+					// 	binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
+					// 	binary_string_inst += integerToBinaryString(ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()), 17)
+					// 	break;
+
+					// }
 				}
+
+
+				// if (op <= 20 && op % 2 == 0) 
+				// {
+				// 	// R3 Type
+				// 	binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
+				// 	binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 5);
+				// 	binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
+				// 	binary_string_inst += integerToBinaryString(0,12);
+					
+				// }
+
+				// //end operation
+				// else if (op == 29) 
+				// {
+				// 	binary_string_inst += integerToBinaryString(0,27);
+				// }
+
+				// else if (op == 24) 
+				// {
+				// 	// RI Type
+				// 	//jmp operation
+				// 	//no need of this block
+				// 	if (instruction.destinationOperand.getOperandType() == Operand.OperandType.Register) 
+				// 	{
+				// 		binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
+				// 		binary_string_inst += integerToBinaryString(0, 22);
+				// 	} 
+				// 	else 
+				// 	//solve tomorrow
+				// 	{
+				// 		binary_string_inst += integerToBinaryString(0, 5);
+				// 		int value = Integer.parseInt(integerToBinaryString(ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()), 5), 2) - pc;
+				// 		//still don't understand these 2 steps
+				// 		String extra = integerToBinaryString(value, 22);
+				// 		binary_string_inst += extra.substring(extra.length() - 22);
+				// 	}
+				// }
+
+				// else 
+				// {
+				// 	// R2I Type
+				// 	if (op >= 25 && op <= 28) 
+				// 	//solve tomorrow
+				// 	//not understanding the need of the step
+				// 	{
+				// 		binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
+				// 		binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 5);
+				// 		//don't understand these 3 steps
+				// 		int value = Integer.parseInt(integerToBinaryString(ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()), 5), 2) - pc;
+				// 		String extra = integerToBinaryString(value, 17);
+				// 		binary_string_inst += extra.substring(extra.length() - 17);
+				// 	} 
+				// 	else 
+				// 	{
+				// 		//don't understand these 3 steps
+				// 		binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
+				// 		binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
+				// 		binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 17);
+				// 	}
+				// }
 				int instInteger = (int) Long.parseLong(binary_string_inst, 2);
 				byte[] instBinary = ByteBuffer.allocate(4).putInt(instInteger).array();
 				file.write(instBinary);
