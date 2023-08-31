@@ -22,7 +22,7 @@ public class Simulator {
 		put(OperationType.subi , "00011");
 		put(OperationType.mul , "00100");
 		put(OperationType.muli , "00101");
-		put(OperationType.div , "00110");
+		put(OperationType.div , "001100");
 		put(OperationType.divi , "00111");
 		put(OperationType.and , "01000");
 		put(OperationType.andi , "01001");
@@ -107,6 +107,7 @@ public class Simulator {
 
 				//Getting the interger value of the optcode for cases because the 
 				//optcode is designed in such a way that similar operations occur together
+				// int op=Integer.parseInt(opHashMap.get(instruction.getOperationType()),2);
 				int pc = instruction.getProgramCounter();
 				
 				
@@ -147,13 +148,12 @@ public class Simulator {
 						else
 						{
 							binary_string_inst += integerToBinaryString(0, 5);
+							// int offset = Integer.parseInt(integerToBinaryString(ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()), 5), 2) - pc;
+							// String string_offset = integerToBinaryString(offset, 22);
+							// binary_string_inst += string_offset.substring(string_offset.length() - 22);
 							int offset = ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()) - pc;
-							String string_offset = integerToBinaryString(offset, 22);
-							if(string_offset.length()>22)
-								//this is because sometimes the length of the offset is larger tham 22.
-								binary_string_inst += string_offset.substring(string_offset.length() - 22);
-							else
-								binary_string_inst += string_offset;
+							String string_offset = integerToBinaryString(offset, 32);
+							binary_string_inst += string_offset.substring(string_offset.length() - 22);
 						}
 						break;
 					}
@@ -164,12 +164,13 @@ public class Simulator {
 					case bgt :{
 						binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
 						binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 5);
+						//don't understand these 3 steps
+						// int offset = Integer.parseInt(integerToBinaryString(ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()), 5), 2) - pc;
+						// String string_offset = integerToBinaryString(offset, 17);
+						// binary_string_inst += string_offset.substring(string_offset.length() - 17);
 						int offset =ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()) - pc;
 						String string_offset = integerToBinaryString(offset, 17);
-						if(string_offset.length()>17)
-							binary_string_inst += string_offset.substring(string_offset.length() - 17);
-						else
-							binary_string_inst += string_offset;
+						binary_string_inst += string_offset.substring(string_offset.length() - 17);
 						break;
 					}
 					case addi :
@@ -190,8 +191,76 @@ public class Simulator {
 						binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 17);
 						break;
 					}
+					// case load :
+					// case store :{
+					// 	binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
+					// 	binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
+					// 	binary_string_inst += integerToBinaryString(ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()), 17)
+					// 	break;
+
+					// }
 				}
-				System.out.println(binary_string_inst);
+
+
+				// if (op <= 20 && op % 2 == 0) 
+				// {
+				// 	// R3 Type
+				// 	binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
+				// 	binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 5);
+				// 	binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
+				// 	binary_string_inst += integerToBinaryString(0,12);
+					
+				// }
+
+				// //end operation
+				// else if (op == 29) 
+				// {
+				// 	binary_string_inst += integerToBinaryString(0,27);
+				// }
+
+				// else if (op == 24) 
+				// {
+				// 	// RI Type
+				// 	//jmp operation
+				// 	//no need of this block
+				// 	if (instruction.destinationOperand.getOperandType() == Operand.OperandType.Register) 
+				// 	{
+				// 		binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
+				// 		binary_string_inst += integerToBinaryString(0, 22);
+				// 	} 
+				// 	else 
+				// 	//solve tomorrow
+				// 	{
+				// 		binary_string_inst += integerToBinaryString(0, 5);
+				// 		int value = Integer.parseInt(integerToBinaryString(ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()), 5), 2) - pc;
+				// 		//still don't understand these 2 steps
+				// 		String extra = integerToBinaryString(value, 22);
+				// 		binary_string_inst += extra.substring(extra.length() - 22);
+				// 	}
+				// }
+
+				// else 
+				// {
+				// 	// R2I Type
+				// 	if (op >= 25 && op <= 28) 
+				// 	//solve tomorrow
+				// 	//not understanding the need of the step
+				// 	{
+				// 		binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
+				// 		binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 5);
+				// 		//don't understand these 3 steps
+				// 		int value = Integer.parseInt(integerToBinaryString(ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()), 5), 2) - pc;
+				// 		String extra = integerToBinaryString(value, 17);
+				// 		binary_string_inst += extra.substring(extra.length() - 17);
+				// 	} 
+				// 	else 
+				// 	{
+				// 		//don't understand these 3 steps
+				// 		binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
+				// 		binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
+				// 		binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 17);
+				// 	}
+				// }
 				int instInteger = (int) Long.parseLong(binary_string_inst, 2);
 				byte[] instBinary = ByteBuffer.allocate(4).putInt(instInteger).array();
 				file.write(instBinary);
