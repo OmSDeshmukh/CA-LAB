@@ -211,6 +211,7 @@ public class Simulator {
 				//4byte array example[23,0,0,0]
 				byte[] instBinary = ByteBuffer.allocate(4).putInt(instInteger).array();
 				file.write(instBinary);
+				//
 			}
 			file.close();
 		}
