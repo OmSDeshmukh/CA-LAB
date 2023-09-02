@@ -6,15 +6,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
-
-import generic.Operand.OperandType;
-import generic.ParsedProgram;
 import generic.Instruction.OperationType;
-
 
 public class Simulator {
 		
 	static FileInputStream inputcodeStream = null;
+	//A hash map for opcode of commands
 	public static HashMap<OperationType, String> opHashMap = new HashMap<OperationType, String>(){{
 		put(OperationType.add, "00000");
 		put(OperationType.addi , "00001");
@@ -48,10 +45,7 @@ public class Simulator {
 		put(OperationType.end, "11101");
 	}};
 		
-	
-	//start of code for assembler
-	//Here we use the parseDataSection to get the address from where the code(instructions) start
-	//feed it to parseCodeSection
+
 	public static void setupSimulation(String assemblyProgramFile)
 	{	
 		int firstCodeAddress = ParsedProgram.parseDataSection(assemblyProgramFile);
@@ -59,6 +53,8 @@ public class Simulator {
 		ParsedProgram.printState();
 	}
 
+	//A function to convert given interger to binary(in string) with specified number of bits
+	//padded 0 if required
 	public static String integerToBinaryString(int number, int numBits )
 	{
         // Convert the integer to a binary string
@@ -83,12 +79,19 @@ public class Simulator {
 		//4. assemble one instruction at a time, and write to the file
 		//5. close the file
 
+		//generating an output stream to write into a file
 		FileOutputStream file;
 		try 
 		{
+			//creating a file at specified output location
 			file = new FileOutputStream(objectProgramFile);
 
 			//Start with writing the firstCodeAddress to the file
+			//the address from where the instruction starts
+			//bytebuffer() to alloate a memory of 4bytes
+			//putInt() to convert the input int into binary representation
+			//array() returns a byte array of whatever integer was input
+			//write function writes it into the file
 			file.write(ByteBuffer.allocate(4).putInt(ParsedProgram.firstCodeAddress).array());
 
 			//For writing the data to the file
@@ -102,13 +105,11 @@ public class Simulator {
 				//initialise the string
 				String binary_string_inst = "";
 				
-				//add the optcode to the string
+				//add the optcode to the string using HashMap
 				binary_string_inst += opHashMap.get(instruction.getOperationType());
 
-				//Getting the interger value of the optcode for cases because the 
-				//optcode is designed in such a way that similar operations occur together
+				//getting the program counter for calculating offsets for labels
 				int pc = instruction.getProgramCounter();
-				
 				
 				switch(instruction.getOperationType())
 				{
@@ -124,6 +125,7 @@ public class Simulator {
 					case sll : 
 					case srl : 
 					case sra :{
+						//all three operands are registers
 						binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
 						binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 5);
 						binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
@@ -137,7 +139,7 @@ public class Simulator {
 					}
 					//jmp operation
 					case jmp:{
-						//if jump to a register
+						//if jump to a register(due to the condition mentioned in ParsedProgram.java)
 						if (instruction.destinationOperand.getOperandType() == Operand.OperandType.Register) 
 						{
 							binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
@@ -146,9 +148,13 @@ public class Simulator {
 						// jmp to label
 						else
 						{
+							//since there is no destination operand
 							binary_string_inst += integerToBinaryString(0, 5);
+							//subracting pc so that we can get the offset
 							int offset = ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()) - pc;
+							//converting the offset into string
 							String string_offset = integerToBinaryString(offset, 22);
+							//since only 22 bits of space is available for encoding, we use this if..else block
 							if(string_offset.length()>22)
 								//this is because sometimes the length of the offset is larger tham 22.
 								binary_string_inst += string_offset.substring(string_offset.length() - 22);
@@ -164,8 +170,11 @@ public class Simulator {
 					case bgt :{
 						binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
 						binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 5);
+						//subracting pc so that we can get the offset
 						int offset =ParsedProgram.symtab.get(instruction.getDestinationOperand().getLabelValue()) - pc;
+						//converting the offset into string
 						String string_offset = integerToBinaryString(offset, 17);
+						//since only 17 bits of space is available for encoding, we use this if..else block
 						if(string_offset.length()>17)
 							binary_string_inst += string_offset.substring(string_offset.length() - 17);
 						else
@@ -187,12 +196,19 @@ public class Simulator {
 					case store :{
 						binary_string_inst += integerToBinaryString(instruction.getSourceOperand1().getValue(), 5);
 						binary_string_inst += integerToBinaryString(instruction.getDestinationOperand().getValue(), 5);
+						//no need to subtract pc since the second source operand is either an immediate or 
+						//label with $ sign which convert the labe into offset
 						binary_string_inst += integerToBinaryString(instruction.getSourceOperand2().getValue(), 17);
 						break;
 					}
 				}
-				System.out.println(binary_string_inst);
+				// System.out.println(binary_string_inst);
+				//Parsing the string into interger
+				//using parseLong to prevent loss of precision
 				int instInteger = (int) Long.parseLong(binary_string_inst, 2);
+				//bytebuffer allocates 4 bytes into which the instInterger converted into binary is put
+				//lastly array() returns the bytearray of corresponding interger which is written into the file
+				//4byte array example[23,0,0,0]
 				byte[] instBinary = ByteBuffer.allocate(4).putInt(instInteger).array();
 				file.write(instBinary);
 			}
@@ -205,7 +221,6 @@ public class Simulator {
 		catch (IOException e) 
 		{
 			e.printStackTrace();
-			
 		}
 		
 	}
