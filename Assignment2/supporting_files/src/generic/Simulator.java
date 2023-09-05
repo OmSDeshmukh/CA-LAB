@@ -223,7 +223,6 @@ public class Simulator {
 		{
 			e.printStackTrace();
 		}
-		
 	}
 	
 }
