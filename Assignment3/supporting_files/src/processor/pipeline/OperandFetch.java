@@ -2,13 +2,9 @@ package processor.pipeline;
 
 import generic.Instruction.OperationType;
 import generic.Operand.OperandType;
-
 import processor.Processor;
-
 import java.util.HashMap;
-
 import generic.Instruction;
-
 import generic.Operand;
 
 
@@ -216,7 +212,7 @@ public class OperandFetch {
 					break;					
 				}	
 			}
-			OF_EX_Latch.setInsturction(inst);
+			OF_EX_Latch.setInstruction(inst);
 			IF_OF_Latch.setOF_enable(false);
 			OF_EX_Latch.setEX_enable(true);
 		}
