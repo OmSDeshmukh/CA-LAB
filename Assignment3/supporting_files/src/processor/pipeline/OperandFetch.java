@@ -214,8 +214,7 @@ public class OperandFetch {
 					inst.setDestinationOperand(rd);
 
 					break;					
-				}
-					
+				}	
 			}
 			OF_EX_Latch.setInsturction(inst);
 			IF_OF_Latch.setOF_enable(false);
