@@ -33,7 +33,17 @@ public class Statistics {
 		Statistics.numberOfInstructions = numberOfInstructions;
 	}
 
+	public int getNumberOfInstructions() {
+		return Statistics.numberOfInstructions;
+	}
+
 	public void setNumberOfCycles(int numberOfCycles) {
 		Statistics.numberOfCycles = numberOfCycles;
 	}
+
+	public int getNumberOfCycles() {
+		return Statistics.numberOfCycles;
+	}
+
+
 }
