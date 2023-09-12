@@ -105,22 +105,33 @@ public class OperandFetch {
 					rs1.setOperandType(OperandType.Register);
 					rs1.setValue(Integer.parseInt(string_instruction.substring(5,10),2));
 					inst.setSourceOperand1(rs1);
+					int op1 = containingProcessor.getRegisterFile().getValue(rs1.getValue());
+					OF_EX_Latch.setOp1(op1);
 
 					Operand rs2 = new Operand();
 					rs2.setOperandType(OperandType.Register);
 					rs2.setValue(Integer.parseInt(string_instruction.substring(10,15),2));
 					inst.setSourceOperand2(rs2);
+					int op2 = containingProcessor.getRegisterFile().getValue(rs2.getValue());
+					OF_EX_Latch.setOp2(op2);
 
 					Operand rd = new Operand();
 					rd.setOperandType(OperandType.Register);
 					rd.setValue(Integer.parseInt(string_instruction.substring(15,20),2));
-					inst.setDestinationOperand(rd);
+					inst.setDestinationOperand(rd);			
 
+					OF_EX_Latch.setInstruction(inst);
 					break;	
 				}
 				//end operation
 				case end:{
-						break;
+						int imm = Integer.parseInt(string_instruction.substring(10, 32), 2); // TODO: 2's complement
+						if (string_instruction.charAt(10)=='1'){
+							imm = -1*twos_complement(string_instruction.substring(10, 32));
+						}
+						OF_EX_Latch.setInstruction(inst);
+						OF_EX_Latch.setImm(imm);
+					break;
 				}
 				//jmp operation
 				case jmp:{
@@ -144,6 +155,9 @@ public class OperandFetch {
 						lable.setValue(Integer.parseInt(string_instruction.substring(6,10),2));
 						inst.setDestinationOperand(lable);
 					}
+
+					OF_EX_Latch.setImm(immx);
+
 					break;
 				}
 				//R2I
@@ -164,6 +178,8 @@ public class OperandFetch {
 					rs1.setOperandType(OperandType.Register);
 					rs1.setValue(Integer.parseInt(string_instruction.substring(5,10),2));
 					inst.setSourceOperand1(rs1);
+					int op1 = containingProcessor.getRegisterFile().getValue(rs1.getValue());
+					OF_EX_Latch.setOp1(op1);
 
 					Operand rs2 = new Operand();
 					int immx;
@@ -175,13 +191,16 @@ public class OperandFetch {
 					rs2.setOperandType(OperandType.Immediate);
 					rs2.setValue(immx);
 					inst.setSourceOperand2(rs2);
+					OF_EX_Latch.setImm(immx);
 
 					Operand rd = new Operand();
 					rd.setOperandType(OperandType.Register);
 					rd.setValue(Integer.parseInt(string_instruction.substring(10,15),2));
 					inst.setDestinationOperand(rd);
-					break;
+					int op2 = containingProcessor.getRegisterFile().getValue(rd.getValue());	
+					OF_EX_Latch.setOp2(op2);
 
+					break;
 				}
 				//R2I Branch instruction
 				case beq : 
@@ -192,11 +211,15 @@ public class OperandFetch {
 					rs1.setOperandType(OperandType.Register);
 					rs1.setValue(Integer.parseInt(string_instruction.substring(5,10),2));
 					inst.setSourceOperand1(rs1);
+					int op1 = containingProcessor.getRegisterFile().getValue(rs1.getValue());
+					OF_EX_Latch.setOp1(op1);
 
 					Operand rs2 = new Operand();
 					rs2.setOperandType(OperandType.Register);
 					rs2.setValue(Integer.parseInt(string_instruction.substring(10,15),2));
 					inst.setSourceOperand2(rs2);
+					int op2 = containingProcessor.getRegisterFile().getValue(rs2.getValue());
+					OF_EX_Latch.setOp2(op2);
 
 					Operand rd = new Operand();
 					int immx;
@@ -208,6 +231,7 @@ public class OperandFetch {
 					rd.setOperandType(OperandType.Immediate);
 					rd.setValue(immx);
 					inst.setDestinationOperand(rd);
+					OF_EX_Latch.setImm(immx);
 
 					break;					
 				}	

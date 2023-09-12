@@ -6,6 +6,7 @@ public class OF_EX_LatchType {
 	
 	boolean EX_enable;
 	Instruction instruction;
+	int op1 , op2 , imm ;
 	
 	public OF_EX_LatchType()
 	{
@@ -26,5 +27,29 @@ public class OF_EX_LatchType {
 
 	public Instruction getInstruction() {
 		return instruction;
+	}
+
+	public void setOp1(int op1){
+		this.op1 = op1 ;
+	}
+
+	public int getOp1(){
+		return op1 ;
+	}
+
+	public void setOp2(int op2){
+		this.op2 = op2 ;
+	}
+
+	public int getOp2(){
+		return op2 ;
+	}
+
+	public void setImm(int imm){
+		this.imm = imm ;
+	}
+
+	public int getImm(){
+		return imm ;
 	}
 }
