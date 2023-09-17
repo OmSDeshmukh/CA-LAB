@@ -1,5 +1,6 @@
 package processor.pipeline;
 // MIXTURE
+// complete
 import generic.Instruction;
 
 public class OF_EX_LatchType {

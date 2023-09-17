@@ -45,7 +45,4 @@ public class EX_MA_LatchType {
 	public Operand getOp2(){
 		return op2 ;
 	}
-
-	
-
 }

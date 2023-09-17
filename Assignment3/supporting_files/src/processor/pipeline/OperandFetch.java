@@ -1,5 +1,6 @@
 package processor.pipeline;
 // OM AGAIN ?
+// completete
 import generic.Instruction.OperationType;
 import generic.Operand.OperandType;
 import processor.Processor;

@@ -1,5 +1,6 @@
 package processor.pipeline;
 // OM NE KELAY
+// complete
 public class IF_OF_LatchType {
 	
 	boolean OF_enable;
