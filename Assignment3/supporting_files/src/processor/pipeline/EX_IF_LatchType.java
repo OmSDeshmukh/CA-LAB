@@ -23,7 +23,4 @@ public class EX_IF_LatchType {
 	public void setIF_enable(boolean IF_enable){
 		this.IF_enable = IF_enable ;
 	}
-
-	
-
 }
