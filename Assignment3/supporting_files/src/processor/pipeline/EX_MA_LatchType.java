@@ -1,7 +1,7 @@
 package processor.pipeline;
 import generic.Operand;
 import generic.Instruction;
-
+// DONE DANA DONE
 public class EX_MA_LatchType {
 	
 	boolean MA_enable;

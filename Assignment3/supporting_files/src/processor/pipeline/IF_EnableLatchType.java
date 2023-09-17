@@ -1,5 +1,5 @@
 package processor.pipeline;
-
+// OM NE KELAY
 public class IF_EnableLatchType {
 	
 	boolean IF_enable;

@@ -1,5 +1,5 @@
 package processor.pipeline;
-
+// SMOOTH OPERATOR
 public class RegisterFile {
 	int[] registerFile;
 	int programCounter;

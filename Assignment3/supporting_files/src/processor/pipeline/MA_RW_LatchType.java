@@ -1,5 +1,5 @@
 package processor.pipeline;
-
+// HE KONI LIHILAY ?
 import generic.Instruction;
 
 public class MA_RW_LatchType {

@@ -1,5 +1,5 @@
 package processor.pipeline;
-
+// ZALAY !!
 public class EX_IF_LatchType {
 	boolean IF_enable ;
 	int pc ;
