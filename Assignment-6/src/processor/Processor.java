@@ -15,6 +15,7 @@ import processor.pipeline.OperandFetch;
 import processor.pipeline.RegisterFile;
 import processor.pipeline.RegisterWrite;
 import processor.memorysystem.Cache;
+import configuration.Configuration;
 
 public class Processor {
 	
@@ -55,8 +56,8 @@ public class Processor {
 		MAUnit = new MemoryAccess(this, EX_MA_Latch, MA_RW_Latch);
 		RWUnit = new RegisterWrite(this, MA_RW_Latch, IF_EnableLatch , EX_MA_Latch);
 
-		l1iCache = new Cache(this, 0, 16);
-		l1dCache = new Cache(this, 0, 16);
+		l1iCache = new Cache(this, Configuration.L1i_latency, Configuration.L1i_numberOfLines*4);
+		l1dCache = new Cache(this, Configuration.L1d_latency, Configuration.L1d_numberOfLines*4);
 	}
 	
 	public void printState(int memoryStartingAddress, int memoryEndingAddress)

@@ -1,5 +1,0 @@
-Number of instructions executed = 94
-Number of cycles taken = 4058
-Number of data hazards = 90
-Number of control hazards = 32
-IPC : 0
