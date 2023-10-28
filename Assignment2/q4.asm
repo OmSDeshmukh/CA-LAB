@@ -1,6 +1,6 @@
     .data
 a:
-    100
+    500
     .text
 main:
     load %x0, $a, %x4
@@ -11,6 +11,9 @@ main:
     addi %x9, 2, %x9
 loopi:
     subi %x6, 1, %x6
+    muli %x7, 2, %x7
+    muli %x7, 2, %x7
+    muli %x9, 2, %x9
     muli %x7, 2, %x7
     muli %x7, 2, %x7
     muli %x9, 2, %x9
