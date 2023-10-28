@@ -11,4 +11,5 @@ main:
     end
 od:
     addi %x0, 1, %x10
+    addi %x0, 111, %x7
     end
