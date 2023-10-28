@@ -4,6 +4,7 @@ import processor.*;
 
 import configuration.Configuration;
 
+//write through cache
 public class Cache implements Element{
     boolean available = true ;
     public int latency ;
@@ -13,6 +14,8 @@ public class Cache implements Element{
     int line_size ;
     CacheLine[] cach ;
     int[] index ;
+    //index- for the cache line to find
+    //tag- find the element in that cache line
 
     public Cache(Processor proc , int lat , int cSize){
 
@@ -20,6 +23,7 @@ public class Cache implements Element{
 
         this.latency = lat ;
         this.cache_size = cSize;
+        //line size is the number of bits available for index
         this.line_size = (int)(Math.log(f)/Math.log(2));
         this.containingProcessor = proc ;
         this.cach = new CacheLine[f];
@@ -29,18 +33,28 @@ public class Cache implements Element{
     }
         
     private int[] getindextag(int addr){
+        // Convert the memory address to a binary string representation.
         String a = Integer.toBinaryString(addr);
+
+        // Pad the binary string with leading zeros to ensure it's 32 bits long.
         String pad = "";
         for (int i = 0; i < 32 - a.length(); i++)
             pad = "0" + pad;
         a = pad + a ;
+
+        // Extract the "tag" bits by taking the most significant bits.
         int add_tag = Integer.parseInt(a.substring(0, a.length() - line_size), 2);
+
+        // Create a bit mask for extracting the "index" bits.
+        //ind refers to the offset in a cache block
         int temp_ind;
         String ind = "0";
         if (line_size != 0){
             for(int i = 0; i < line_size; i++){
                 ind = ind + "1";
             }
+            //stores the index offset without padding
+            //this is to extract the offset and mask off the remaining values.
             temp_ind = addr & Integer.parseInt(ind, 2);
         }
         
@@ -54,29 +68,21 @@ public class Cache implements Element{
         int index = getindextag(adr)[0] ;
         int tag = getindextag(adr)[1];
         
-        int ret = 100;
+        
         if(tag == cach[index].tag[1]){
-            cach[index].least_recently_used = 0;
+            // cach[index].least_recently_used = 0;
+            cach[index].setleastrecentlyused(0);
             available = true ;
-            ret = 1 ;
+            return cach[index].getData(1);
         }
         else if(tag == cach[index].tag[0]){
-            cach[index].least_recently_used = 1;
+            // cach[index].least_recently_used = 1;
+            cach[index].setleastrecentlyused(1);
             available = true ;
-            ret = 0 ;
+            return cach[index].getData(0);
         }
         else{
-            ret = -1;
             available = false ;
-        }
-
-        if(ret == 0){
-            return cach[index].data[0];
-        }
-        else if(ret == 1){
-            return cach[index].data[1];
-        }
-        else{
             return -1;
         }
     }
