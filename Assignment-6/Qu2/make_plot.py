@@ -83,7 +83,7 @@ for folder_name in os.listdir(base_dir):
         a, b = int(a), int(b)
         for txt_file in os.listdir(folder_path):
             if txt_file.endswith(".txt"):
-                print(txt_file)
+                # print(txt_file)
                 file_path = os.path.join(folder_path, txt_file)
                 ipc_values = extract_values(file_path)
                 data.extend([(b / 4, ipc) for ipc in ipc_values])
@@ -108,7 +108,7 @@ labels = ['prime' , 'fibonacci' , 'descending' , 'evenorodd' , 'palindrome']
 for i in range(5):
     plt.plot(x_values1, [y_values1[i][1] , y_values1[i][3] , y_values1[i][2] , y_values1[i][0] ], marker='o', c=color[i] , label = labels[i])
 plt.legend()
-plt.xlabel('Ldi Cache memory size(in bytes)')
+plt.xlabel('L1d Cache memory size(in bytes)')
 plt.ylabel('IPC')
 plt.title('IPC vs size')
 plt.grid(True)

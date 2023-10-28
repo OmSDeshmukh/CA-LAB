@@ -83,7 +83,7 @@ for folder_name in os.listdir(base_dir):
         a, b = int(a), int(b)
         for txt_file in os.listdir(folder_path):
             if txt_file.endswith(".txt"):
-                print(txt_file)
+                # print(txt_file)
                 file_path = os.path.join(folder_path, txt_file)
                 ipc_values = extract_values(file_path)
                 data.extend([(a / 4, ipc) for ipc in ipc_values])
@@ -114,5 +114,7 @@ plt.grid(True)
 plt.xticks(x_values1)
 # plt.yticks(y_values1.reshape(-1))
 plt.show()
+# print(y_values1)
+# plt.savefig("q1.png")
+print(x_values1)
 print(y_values1)
-plt.savefig("q1.png")
