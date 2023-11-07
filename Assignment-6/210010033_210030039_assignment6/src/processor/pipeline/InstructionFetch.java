@@ -28,7 +28,8 @@ public class InstructionFetch implements Element{
 	public void performIF()
 	{
 		if(true){
-			if((EX_IF_Latch.isIF_enable() == true) && (IF_OF_Latch.isIF_branching_busy() == false) && (IF_OF_Latch.isIF_busy() == false)){
+			if((EX_IF_Latch.isIF_enable() == true) && (IF_OF_Latch.isIF_branching_busy() == false) && (IF_OF_Latch.isIF_busy() == false))
+			{
 				Simulator.getEventQueue().addEvent(new MemoryReadEvent(Clock.getCurrentTime()+containingProcessor.getL1iCache().latency,this,containingProcessor.getL1iCache(),EX_IF_Latch.getPC()));
 				containingProcessor.getRegisterFile().setProgramCounter(EX_IF_Latch.getPC());
 				EX_IF_Latch.setIF_enable(false);
